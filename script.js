@@ -1,11 +1,6 @@
 import events from "./js/events.js";
 
-let gameContainer = Array.from(
-  document.querySelector(".game-container").children
-);
-
-gameContainer.forEach((cell) => {
-  cell.addEventListener("click", () => {
-    console.log(cell.id);
-  });
+let resetBtn = document.querySelector("#reset");
+resetBtn.addEventListener("click", () => {
+  events.emit("resetBoard");
 });

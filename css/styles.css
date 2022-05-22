@@ -24,9 +24,15 @@ header {
   gap: 20px;
 }
 .cell {
+  height: 120px;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: gray;
   border-radius: 10px;
   cursor: pointer;
+  font-size: 5rem;
 }
 .cell:hover {
   transform: scale(1.05) rotate(-2deg);
