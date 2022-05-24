@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./img//icon.svg" type="image/x-icon" />
     <link rel="stylesheet" href="./css/reset.css" />
     <link rel="stylesheet" href="./css/styles.css" />
     <title>Odin Project - Tic tac toe</title>
@@ -22,9 +23,15 @@
         <div class="cell" id="cell-8" data-id="7"></div>
         <div class="cell" id="cell-9" data-id="8"></div>
       </div>
+      <div class="player-labels">
+        <div class="player-active" id="player1">Player 1</div>
+        <div class="spacer"></div>
+        <div class="player" id="player2">Player 2</div>
+      </div>
     </div>
-    <button id="reset">Reset</button>
+    <!-- <button id="reset">Reset</button> -->
     <script src="./script.js" type="module" defer></script>
     <script src="./js/gameBoard.js" type="module" defer></script>
+    <script src="./js/gameController.js" type="module" defer></script>
   </body>
 </html>

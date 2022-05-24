@@ -1,6 +1,6 @@
 import events from "./events.js";
 
-let gameBoard = (() => {
+const GameBoard = (() => {
   //Variables
   let _gameBoard = ["", "", "", "", "", "", "", "", ""];
   let _cells = [];
@@ -21,20 +21,16 @@ let gameBoard = (() => {
     });
   };
 
-  const _playerMove = (mark, index) => {
-    if (_gameBoard[index] == "") {
-      _gameBoard[index] = mark;
+  const _playerMove = (move) => {
+    if (_gameBoard[move.index] == "") {
+      _gameBoard[move.index] = move.mark;
       _render();
     }
   };
+  const getBoard = () => _gameBoard;
 
   const _resetBoard = () => {
     _gameBoard = ["", "", "", "", "", "", "", "", ""];
-    _render();
-  };
-
-  const _cellClick = (cell) => {
-    _gameBoard[cell] = "X";
     _render();
   };
 
@@ -44,5 +40,6 @@ let gameBoard = (() => {
   //Events
   events.on("resetBoard", _resetBoard);
   events.on("playerMove", _playerMove);
-  events.on("cellClick", _cellClick);
 })();
+
+export default GameBoard;

@@ -35,8 +35,8 @@ h1 {
   gap: 15px;
 }
 .cell {
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,7 +49,52 @@ h1 {
   border-image: var(--bg-gradient) 1;
 }
 .cell:hover {
+  /* animation: in 200ms; */
   transform: scale(1.05) rotate(-2deg);
   transition: 200ms;
   background-color: rgb(150, 150, 150);
+}
+/* @keyframes in {
+  from {
+    transform: scale(1) rotate(0deg);
+    background-color: gray;
+  }
+  to {
+    transfrom: scale(1.05) rotate(-2deg);
+    background-color: rgb(150, 150, 150);
+  }
+} */
+.player-labels {
+  height: 35px;
+  margin-top: 30px;
+  display: flex;
+}
+.player {
+  position: relative;
+  background-image: var(--bg-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 2rem;
+}
+.player-active {
+  position: relative;
+  font-size: 2rem;
+}
+.player-active::after {
+  transition: all 200ms;
+  position: absolute;
+  content: url("../img/splash.svg");
+  top: -87px;
+  right: -110px;
+  z-index: -1;
+}
+.spacer {
+  width: 100px;
+}
+@media (min-width: 500px) {
+  .cell {
+    height: 120px;
+    width: 120px;
+  }
 }
