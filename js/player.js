@@ -1,21 +1,17 @@
 import events from "./events.js";
+import GameController from "./gameController.js";
 
-const Player = (playerName) => {
+const Player = () => {
   //Variables
-  let _playerName = playerName;
-
+  let human = true;
+  let playerType = GameController.getPlayerID();
   //DOM Bindings
 
   //Methods
-
-  const getName = () => _playerName;
-
-  const setName = (name) => (_playerName = name);
-
-  //Events
-
-  //Method Exposure
-  return { getName, setName };
+  const getPlayerType = () => {
+    return playerType;
+  };
+  return { getPlayerType };
 };
 
 export default Player;

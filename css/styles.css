@@ -49,21 +49,10 @@ h1 {
   border-image: var(--bg-gradient) 1;
 }
 .cell:hover {
-  /* animation: in 200ms; */
   transform: scale(1.05) rotate(-2deg);
   transition: 200ms;
   background-color: rgb(150, 150, 150);
 }
-/* @keyframes in {
-  from {
-    transform: scale(1) rotate(0deg);
-    background-color: gray;
-  }
-  to {
-    transfrom: scale(1.05) rotate(-2deg);
-    background-color: rgb(150, 150, 150);
-  }
-} */
 .player-labels {
   height: 35px;
   margin-top: 30px;
@@ -85,8 +74,8 @@ h1 {
   transition: all 200ms;
   position: absolute;
   content: url("../img/splash.svg");
-  top: -87px;
-  right: -110px;
+  top: -86px;
+  right: -117px;
   z-index: -1;
 }
 .spacer {

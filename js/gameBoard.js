@@ -27,7 +27,8 @@ const GameBoard = (() => {
       _render();
     }
   };
-  const getBoard = () => _gameBoard;
+
+  const getBoard = () => events.emit("boardUpdate", _gameBoard);
 
   const _resetBoard = () => {
     _gameBoard = ["", "", "", "", "", "", "", "", ""];
@@ -40,6 +41,7 @@ const GameBoard = (() => {
   //Events
   events.on("resetBoard", _resetBoard);
   events.on("playerMove", _playerMove);
+  events.on("getBoard", getBoard);
 })();
 
 export default GameBoard;
