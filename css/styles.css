@@ -110,6 +110,18 @@ h1 {
 .spacer {
   width: 100px;
 }
+dialog {
+  border: none;
+  background-color: transparent;
+}
+dialog::before {
+  content: url("../img/round-splatter.svg");
+}
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
 @media (min-width: 500px) {
   .cell {
     height: 120px;

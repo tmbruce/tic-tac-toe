@@ -4,7 +4,13 @@ import GameController from "./js/gameController.js";
 
 let player1 = Player();
 let player2 = Player();
+let settingsBtn = document.querySelector("#gear-icon");
 
+settingsBtn.addEventListener("click", () => {
+  let settingsModal = document.createElement("dialog");
+  document.body.append(settingsModal);
+  settingsModal.showModal();
+});
 const play = (data) => {
   let mark =
     GameController.getCurrentPlayer() == player1.getPlayerType()
