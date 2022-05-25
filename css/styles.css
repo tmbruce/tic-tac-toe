@@ -71,11 +71,40 @@ h1 {
   font-size: 2rem;
 }
 .player-active::after {
+  cursor: pointer;
   transition: all 200ms;
   position: absolute;
   content: url("../img/splash.svg");
   top: -86px;
   right: -117px;
+  z-index: -1;
+}
+.settings {
+  margin-top: 30px;
+  position: relative;
+}
+.settings button {
+  background-color: transparent;
+  border: none;
+}
+#gear-icon {
+  cursor: pointer;
+  position: absolute;
+  margin-top: 60px;
+  width: 60px;
+  height: auto;
+  left: -22px;
+}
+#gear-icon:hover {
+  transform: rotate(-4deg) scale(1.08);
+  transition: 200ms ease-in-out;
+}
+#splatter {
+  position: absolute;
+  width: 130px;
+  top: -5px;
+  left: -56px;
+  height: auto;
   z-index: -1;
 }
 .spacer {

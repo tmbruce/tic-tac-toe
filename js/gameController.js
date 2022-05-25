@@ -19,6 +19,8 @@ const GameController = (() => {
 
   const getTurnNumber = () => _turnNumber;
 
+  const resetTurnCount = () => (_turnNumber = 0);
+
   const _resetGame = () => {
     _turnNumber = 0;
     _currentPlayer = _players[0];
@@ -39,17 +41,14 @@ const GameController = (() => {
     _toggleClass(player2);
   };
 
-  const resetTurnCount = () => (_turnNumber = 0);
-
   const _getBoard = (data) => (board = data);
 
   const checkValidMove = (index) => (board[index] == "" ? true : false);
 
   //Events
   events.on("boardUpdate", (data) => _getBoard(data));
-  events.on("cellClick", () => {
-    events.emit("getBoard");
-  });
+  events.on("cellClick", () => events.emit("getBoard"));
+  events.on("resetGame", () => _resetGame);
 
   //Method Exposure
   return { getCurrentPlayer, switchPlayer, checkValidMove, getPlayerID };
