@@ -7,10 +7,13 @@ let player2 = Player();
 let settingsBtn = document.querySelector("#gear-icon");
 
 settingsBtn.addEventListener("click", () => {
-  let settingsModal = document.createElement("dialog");
-  document.body.append(settingsModal);
+  let settingsModal = document.querySelector("#modal");
+  let text = document.createElement("p");
+  text.textContent = "Hello, World!";
+  settingsModal.append(text);
   settingsModal.showModal();
 });
+
 const play = (data) => {
   let mark =
     GameController.getCurrentPlayer() == player1.getPlayerType()
