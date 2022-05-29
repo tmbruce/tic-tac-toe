@@ -8,9 +8,9 @@ let settingsBtn = document.querySelector("#gear-icon");
 
 settingsBtn.addEventListener("click", () => {
   let settingsModal = document.querySelector("#modal");
-  let text = document.createElement("p");
-  text.textContent = "Hello, World!";
-  settingsModal.append(text);
+  // let text = document.createElement("p");
+  // text.textContent = "Hello, World!";
+  // settingsModal.append(text);
   settingsModal.showModal();
 });
 

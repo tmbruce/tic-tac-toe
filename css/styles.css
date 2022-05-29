@@ -1,9 +1,11 @@
 :root {
   --bg-gradient: linear-gradient(60deg, #ee0979, #ff6a00);
 }
+@font-face {
+  font-family: "Blank-River";
+  src: url("../fonts/Blank-River.ttf");
+}
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: black;
 }
 .container {
@@ -21,6 +23,7 @@ header {
 }
 h1 {
   margin: auto 0;
+  font-family: "Blank-River";
   background-image: var(--bg-gradient);
   background-clip: text;
   -webkit-background-clip: text;
@@ -35,6 +38,8 @@ h1 {
   gap: 15px;
 }
 .cell {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   height: 100px;
   width: 100px;
   display: flex;
@@ -57,6 +62,15 @@ h1 {
   height: 35px;
   margin-top: 30px;
   display: flex;
+  justify-content: space-between;
+  font-family: "Blank-River";
+}
+#player1,
+#player2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 8ch;
 }
 .player {
   position: relative;
@@ -74,8 +88,9 @@ h1 {
   cursor: pointer;
   transition: all 200ms;
   position: absolute;
+  background-color: transparent;
   content: url("../img/splash.svg");
-  top: -86px;
+  top: -88px;
   right: -117px;
   z-index: -1;
 }
@@ -111,18 +126,23 @@ h1 {
   width: 100px;
 }
 dialog {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  max-height: 100%;
   width: 100%;
   height: 100%;
   border: none;
   background-color: transparent;
 }
 dialog::before {
-  position: absolute;
-  left: calc(100vw * 0.39);
-  top: calc(100vh * 0.1);
-  content: url("../img/round-splatter.svg");
+  position: relative;
+  content: url("../img/modal-splatter.svg");
   display: inline-block;
-  transform: rotate(-45deg) scale(2);
+  transform: scale(2.5);
+  top: calc(((100vh - 700px) / 2) + 130px);
+  left: calc(((100vw - 1000px) / 2) + 300px);
 }
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.6);
