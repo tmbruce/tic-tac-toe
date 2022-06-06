@@ -1,6 +1,8 @@
 import events from "./events.js";
+import init, { find_move } from "../test-wasm/pkg/test_wasm.js";
 
 const GameController = (() => {
+  init();
   //Variables
   let _turnNumber = 0;
   let playerId = ["X", "O"];
@@ -39,6 +41,7 @@ const GameController = (() => {
     _turnNumber += 1;
     _toggleClass(player1);
     _toggleClass(player2);
+    find_move(board.toString());
   };
 
   const _getBoard = (data) => (board = data);
@@ -51,7 +54,14 @@ const GameController = (() => {
   events.on("resetGame", () => _resetGame);
 
   //Method Exposure
-  return { getCurrentPlayer, switchPlayer, checkValidMove, getPlayerID };
+  return {
+    getCurrentPlayer,
+    switchPlayer,
+    checkValidMove,
+    getPlayerID,
+    getTurnNumber,
+    _getBoard,
+  };
 })();
 
 export default GameController;

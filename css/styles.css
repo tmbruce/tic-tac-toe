@@ -112,7 +112,7 @@ h1 {
 }
 #gear-icon:hover {
   transform: rotate(-4deg) scale(1.08);
-  transition: 200ms ease-in-out;
+  transition: 300ms ease-in;
 }
 #splatter {
   position: absolute;
@@ -124,6 +124,17 @@ h1 {
 }
 .spacer {
   width: 100px;
+}
+@keyframes paintball {
+  0% {
+    transform: scale(0) translateY(0);
+  }
+  50% {
+    transform: scale(0.5) translateY(-100px);
+  }
+  100% {
+    transform: scale(2.5 translateY(0));
+  }
 }
 dialog {
   position: relative;
@@ -137,6 +148,7 @@ dialog {
   background-color: transparent;
 }
 dialog::before {
+  animation: paintball 150ms ease-out;
   position: relative;
   content: url("../img/modal-splatter.svg");
   display: inline-block;

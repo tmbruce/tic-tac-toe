@@ -5,6 +5,7 @@ import GameController from "./js/gameController.js";
 let player1 = Player();
 let player2 = Player();
 let settingsBtn = document.querySelector("#gear-icon");
+let board = [];
 
 settingsBtn.addEventListener("click", () => {
   let settingsModal = document.querySelector("#modal");
@@ -13,6 +14,7 @@ settingsBtn.addEventListener("click", () => {
   // settingsModal.append(text);
   settingsModal.showModal();
 });
+const _getBoard = (data) => (board = data);
 
 const play = (data) => {
   let mark =
@@ -27,3 +29,4 @@ const play = (data) => {
 };
 
 events.on("cellClick", (data) => play(data));
+events.on("boardUpdate", (data) => _getBoard(data));
