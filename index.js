@@ -9,9 +9,6 @@ let board = [];
 
 settingsBtn.addEventListener("click", () => {
   let settingsModal = document.querySelector("#modal");
-  // let text = document.createElement("p");
-  // text.textContent = "Hello, World!";
-  // settingsModal.append(text);
   settingsModal.showModal();
 });
 const _getBoard = (data) => (board = data);

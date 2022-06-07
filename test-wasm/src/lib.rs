@@ -7,7 +7,7 @@ extern "C" {
     fn log(string: String);
 }
 
-fn check_for_winner(game_board: [char; 9]) -> bool {
+fn check_for_winner(game_board: [char; 9]) -> (bool, Vec<usize>) {
     let win_table = vec![
         vec![0, 1, 2],
         vec![3, 4, 5],
@@ -20,17 +20,19 @@ fn check_for_winner(game_board: [char; 9]) -> bool {
     ];
 
     let mut winner: bool = false;
+    let mut winning_vec: Vec<usize> = vec![0; 3];
     for v in win_table {
         if game_board[v[0]] == 'X' || game_board[v[0]] == 'O' {
             if game_board[v[0]] == game_board[v[1]] && game_board[v[0]] == game_board[v[2]] {
                 winner = true;
+                winning_vec = v;
             }
             if winner == true {
-                return winner;
+                return (winner, winning_vec);
             }
         }
     }
-    return winner;
+    return (winner, winning_vec);
 }
 
 fn input_to_array(game_board: String) -> [char; 9] {
@@ -54,8 +56,9 @@ fn input_to_array(game_board: String) -> [char; 9] {
 }
 
 #[wasm_bindgen]
-pub fn find_move(game_board: String) {
+pub fn find_move(game_board: String) -> String {
     let board: [char; 9] = input_to_array(game_board);
-    let winner: bool = check_for_winner(board);
-    log(winner.to_string());
+    let (winner, moves) = check_for_winner(board);
+    let output = format!("{}-{:?}{:?}{:?}", winner, moves[0], moves[1], moves[2]);
+    output
 }
