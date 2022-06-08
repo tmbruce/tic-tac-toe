@@ -30,20 +30,14 @@ const GameController = (() => {
     events.emit("resetBoard");
   };
 
-  const calcLine = (point1, point2, vec) => {
-    let length =
-      Math.round(
-        Math.sqrt(
-          Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2)
-        ) / 5
-      ) * 5;
+  const calcAngle = (vec) => {
     let angle = 0;
     if (vec[1] == 1 || vec[1] == 7) angle = -90;
     if (vec[1] == 3 || vec[1] == 5) angle = 0;
-    if (vec[1] == 4 && vec[0] == 0) angle = 45;
-    if (vec[1] == 4 && vec[0] == 2) angle = -45;
+    if (vec[1] == 4 && vec[0] == 0) angle = -45;
+    if (vec[1] == 4 && vec[0] == 2) angle = 45;
     if (vec[1] == 4 && vec[0] == 3) angle = -90;
-    return { length, angle };
+    return angle;
   };
 
   const declareWinner = (vec) => {
@@ -54,31 +48,50 @@ const GameController = (() => {
     vec.forEach((point) => {
       winningCells.push(document.getElementById(`cell-${parseInt(point) + 1}`));
     });
-    let { length, angle } = calcLine(
-      winningCells[0].getBoundingClientRect(),
-      winningCells[2].getBoundingClientRect(),
-      vec
-    );
+    let angle = calcAngle(vec);
     let container = gameContainer.getBoundingClientRect();
     let center = winningCells[1].getBoundingClientRect();
+    //Find centroid of center cell of winning line
     let cY = center.top - container.top + 0.5 * center.height;
-    let cX =
-      center.left - container.left + 0.5 * center.width - 0.5 * LINE_WIDTH;
-    let style = `top: ${cY}px; left: ${cX}px; transform: rotate(${
-      angle * -1
-    }deg) scaleY(${length * 1.5}); height: 1px; width: 10px; position: absolute;
-    transform-origin: center;
-    z-index: 1;
+    let cX = center.left - container.left + 0.5 * center.width;
+    console.log(cY, cX); //TODO Rremove this print statement
+    let aY,
+      aX = 0;
+    switch (angle) {
+      case -90:
+        aX = -10;
+        aY = cY - 0.5 * LINE_WIDTH;
+        length = 2 * cX;
+        break;
+      case 0:
+        aX = cX - 0.5 * LINE_WIDTH;
+        aY = 0;
+        length = 2 * cY;
+        break;
+      case -45:
+        aX = -1 - 0.5 * LINE_WIDTH;
+        aY = 2 - 0.5 * LINE_WIDTH;
+        length = 2 * Math.sqrt(Math.pow(cX, 2) + Math.pow(cY, 2));
+        break;
+      case 45:
+        aX = container.width - 1 - 0.5 * LINE_WIDTH;
+        aY = 0.5 * LINE_WIDTH - 2;
+        length = 2 * Math.sqrt(Math.pow(cX, 2) + Math.pow(cY, 2));
+    }
+    let style = `top: ${aY}px; left: ${aX}px; transform: rotate(${angle}deg); height: ${length}px; width: 10px; position: absolute;
+    transform-origin: top right;
+    z-index: 10;
+    border-radius: 10px;
     background-color: white;
     display: block;`;
     strikeThrough.style.cssText = style;
+    let modal = document.querySelector("#modal");
+    let div = document.createElement("div");
+    div.textContent = `${winningCells[0].textContent} wins!`;
     setTimeout(() => {
-      let modal = document.querySelector("#modal");
-      let div = document.createElement("div");
-      div.textContent = `${winningCells[0].textContent} wins!`;
       div.classList.add("win-message");
-      modal.append(div);
       modal.showModal();
+      modal.append(div);
     }, 600);
   };
 
