@@ -11,6 +11,11 @@ const Player = () => {
   const getPlayerType = () => {
     return playerType;
   };
+
+  const changePlayerType = () => {
+    human = !human;
+  };
+
   return { getPlayerType };
 };
 

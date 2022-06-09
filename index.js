@@ -8,9 +8,9 @@ let settingsBtn = document.querySelector("#gear-icon");
 let board = [];
 
 settingsBtn.addEventListener("click", () => {
-  let settingsModal = document.querySelector("#modal");
-  settingsModal.showModal();
+  events.emit("openSettings");
 });
+
 const _getBoard = (data) => (board = data);
 
 const play = (data) => {

@@ -39,7 +39,7 @@ h1 {
   color: black;
   font-family: var(--font-family);
   position: absolute;
-  top: calc((100vh - 220px) / 2);
+  top: calc(((100vh - 220px) / 2) - 30px);
   left: calc((100vw - 230px) / 2);
   width: max-content;
 }
@@ -132,6 +132,41 @@ h1 {
   background-color: transparent;
   border: none;
 }
+.settings-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: black;
+  font-family: var(--font-family);
+  position: absolute;
+}
+.close-btn {
+  position: absolute;
+  top: calc(100vh / 3);
+  right: calc(((100vw - 700px) / 2) + 80px);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 2rem;
+  border: none;
+  background-color: transparent;
+}
+.close-btn:hover {
+  transform: scale(1.05) rotate(5deg);
+  transition: 200ms ease-in;
+}
+.reset-btn {
+  position: absolute;
+  top: calc(220px + (100vh / 3));
+  left: calc((-30px + (100vw - 100px) / 2));
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 3rem;
+  border: none;
+  background-color: transparent;
+}
+.reset-btn:hover {
+  transform: scale(1.05) rotate(-5deg);
+  transition: 200ms ease-in;
+}
 #gear-icon {
   cursor: pointer;
   position: absolute;
@@ -178,6 +213,7 @@ dialog {
   background-color: transparent;
 }
 dialog::before {
+  z-index: -1;
   animation: paintball 150ms ease-out;
   position: relative;
   content: url("../img/modal-splatter.svg");

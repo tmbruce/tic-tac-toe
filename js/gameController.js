@@ -27,6 +27,10 @@ const GameController = (() => {
   const _resetGame = () => {
     _turnNumber = 0;
     _currentPlayer = _players[0];
+    if (player2.classList.contains("player-active")) {
+      _toggleClass(player1);
+      _toggleClass(player2);
+    }
     events.emit("resetBoard");
   };
 
@@ -40,8 +44,51 @@ const GameController = (() => {
     return angle;
   };
 
-  const declareWinner = (vec) => {
+  const calcLine = (centerX, centerY, containerWidth, angle) => {
     const LINE_WIDTH = 10;
+    let length = 0;
+    let aY,
+      aX = 0;
+    switch (angle) {
+      case -90:
+        aX = -10;
+        aY = centerY - 0.5 * LINE_WIDTH;
+        length = 2 * centerX;
+        break;
+      case 0:
+        aX = centerX - 0.5 * LINE_WIDTH;
+        aY = 0;
+        length = 2 * centerY;
+        break;
+      case -45:
+        aX = -1 - 0.5 * LINE_WIDTH;
+        aY = 2 - 0.5 * LINE_WIDTH;
+        length = 2 * Math.sqrt(Math.pow(centerX, 2) + Math.pow(centerY, 2));
+        break;
+      case 45:
+        aX = containerWidth - 1 - 0.5 * LINE_WIDTH;
+        aY = 0.5 * LINE_WIDTH - 2;
+        length = 2 * Math.sqrt(Math.pow(centerX, 2) + Math.pow(centerY, 2));
+    }
+    return { aX, aY, length };
+  };
+
+  const calcCellCentroid = (center, container) => {
+    let cY = center.top - container.top + 0.5 * center.height;
+    let cX = center.left - container.left + 0.5 * center.width;
+    return { cX, cY };
+  };
+
+  const createLineStyle = (aX, aY, angle, length) => {
+    return `top: ${aY}px; left: ${aX}px; transform: rotate(${angle}deg); height: ${length}px; width: 10px; position: absolute;
+    transform-origin: top right;
+    z-index: 10;
+    border-radius: 10px;
+    background-color: white;
+    display: block;`;
+  };
+
+  const declareWinner = (vec) => {
     let strikeThrough = document.querySelector("#strike-through");
     let gameContainer = document.querySelector(".game-container");
     let winningCells = [];
@@ -51,47 +98,34 @@ const GameController = (() => {
     let angle = calcAngle(vec);
     let container = gameContainer.getBoundingClientRect();
     let center = winningCells[1].getBoundingClientRect();
-    //Find centroid of center cell of winning line
-    let cY = center.top - container.top + 0.5 * center.height;
-    let cX = center.left - container.left + 0.5 * center.width;
-    console.log(cY, cX); //TODO Rremove this print statement
-    let aY,
-      aX = 0;
-    switch (angle) {
-      case -90:
-        aX = -10;
-        aY = cY - 0.5 * LINE_WIDTH;
-        length = 2 * cX;
-        break;
-      case 0:
-        aX = cX - 0.5 * LINE_WIDTH;
-        aY = 0;
-        length = 2 * cY;
-        break;
-      case -45:
-        aX = -1 - 0.5 * LINE_WIDTH;
-        aY = 2 - 0.5 * LINE_WIDTH;
-        length = 2 * Math.sqrt(Math.pow(cX, 2) + Math.pow(cY, 2));
-        break;
-      case 45:
-        aX = container.width - 1 - 0.5 * LINE_WIDTH;
-        aY = 0.5 * LINE_WIDTH - 2;
-        length = 2 * Math.sqrt(Math.pow(cX, 2) + Math.pow(cY, 2));
-    }
-    let style = `top: ${aY}px; left: ${aX}px; transform: rotate(${angle}deg); height: ${length}px; width: 10px; position: absolute;
-    transform-origin: top right;
-    z-index: 10;
-    border-radius: 10px;
-    background-color: white;
-    display: block;`;
-    strikeThrough.style.cssText = style;
+    let { cX, cY } = calcCellCentroid(center, container);
+    let { aX, aY, length } = calcLine(cX, cY, container.width, angle);
+    strikeThrough.style.cssText = createLineStyle(aX, aY, angle, length);
     let modal = document.querySelector("#modal");
+    let resetBtn = document.createElement("button");
+    resetBtn.textContent = "Reset game!";
+    resetBtn.classList.add("reset-btn");
+    resetBtn.addEventListener("click", () => {
+      modal.close();
+      _resetGame();
+      style = "";
+      strikeThrough.style.cssText = style;
+      while (modal.firstChild) {
+        modal.removeChild(modal.firstChild);
+      }
+    });
     let div = document.createElement("div");
     div.textContent = `${winningCells[0].textContent} wins!`;
+    let closeBtn = document.createElement("button");
+    closeBtn.classList.add("close-btn");
+    closeBtn.textContent = "Close";
+    closeBtn.addEventListener("click", () => {
+      modal.close();
+    });
     setTimeout(() => {
       div.classList.add("win-message");
       modal.showModal();
-      modal.append(div);
+      modal.append(div, closeBtn, resetBtn);
     }, 600);
   };
 
