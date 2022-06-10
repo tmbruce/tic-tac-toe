@@ -1,10 +1,12 @@
 import events from "./events.js";
-import init, { find_move } from "../test-wasm/pkg/test_wasm.js";
+import init, { find_move } from "../wasm/pkg/wasm.js";
 
 const GameController = (() => {
+  //Initialize WASM bindings
   init();
   //Variables
   let _turnNumber = 0;
+  let gameActive = true;
   let playerId = ["X", "O"];
   let _players = ["X", "O"];
   let _currentPlayer = _players[0];
@@ -13,6 +15,7 @@ const GameController = (() => {
   //DOM Bindings
   let player1 = document.querySelector("#player1");
   let player2 = document.querySelector("#player2");
+  let strikeThrough = document.querySelector("#strike-through");
   //Methods
   const getCurrentPlayer = () => _currentPlayer;
 
@@ -22,9 +25,9 @@ const GameController = (() => {
 
   const getTurnNumber = () => _turnNumber;
 
-  const resetTurnCount = () => (_turnNumber = 0);
-
   const _resetGame = () => {
+    strikeThrough.style.cssText = "";
+    gameActive = true;
     _turnNumber = 0;
     _currentPlayer = _players[0];
     if (player2.classList.contains("player-active")) {
@@ -32,6 +35,7 @@ const GameController = (() => {
       _toggleClass(player2);
     }
     events.emit("resetBoard");
+    events.emit("gameActive", gameActive);
   };
 
   const calcAngle = (vec) => {
@@ -89,7 +93,6 @@ const GameController = (() => {
   };
 
   const declareWinner = (vec) => {
-    let strikeThrough = document.querySelector("#strike-through");
     let gameContainer = document.querySelector(".game-container");
     let winningCells = [];
     vec.forEach((point) => {
@@ -101,40 +104,27 @@ const GameController = (() => {
     let { cX, cY } = calcCellCentroid(center, container);
     let { aX, aY, length } = calcLine(cX, cY, container.width, angle);
     strikeThrough.style.cssText = createLineStyle(aX, aY, angle, length);
-    let modal = document.querySelector("#modal");
-    let resetBtn = document.createElement("button");
-    resetBtn.textContent = "Reset game!";
-    resetBtn.classList.add("reset-btn");
-    resetBtn.addEventListener("click", () => {
-      modal.close();
-      _resetGame();
-      style = "";
-      strikeThrough.style.cssText = style;
-      while (modal.firstChild) {
-        modal.removeChild(modal.firstChild);
-      }
-    });
-    let div = document.createElement("div");
-    div.textContent = `${winningCells[0].textContent} wins!`;
-    let closeBtn = document.createElement("button");
-    closeBtn.classList.add("close-btn");
-    closeBtn.textContent = "Close";
-    closeBtn.addEventListener("click", () => {
-      modal.close();
-    });
+    let data = {
+      type: "winMessage",
+      player: winningCells[0].textContent,
+    };
     setTimeout(() => {
-      div.classList.add("win-message");
-      modal.showModal();
-      modal.append(div, closeBtn, resetBtn);
+      events.emit("openModal", data);
     }, 600);
   };
 
   const checkWinner = () => {
     let res = find_move(board.toString());
-    let [win, vec] = res.split("-");
-    vec = [...vec];
-    if (win == "true") {
-      declareWinner(vec);
+    if (parseInt(res)) {
+      //return next move
+    } else {
+      let [win, vec] = res.split("-");
+      vec = [...vec];
+      if (win == "true") {
+        gameActive = false;
+        events.emit("gameActive", gameActive);
+        declareWinner(vec);
+      }
     }
   };
 
@@ -150,8 +140,9 @@ const GameController = (() => {
     _turnNumber += 1;
     _toggleClass(player1);
     _toggleClass(player2);
-    checkWinner();
+    if (_turnNumber > 4) checkWinner();
   };
+  const isGameActive = () => gameActive;
 
   const _getBoard = (data) => (board = data);
 
@@ -160,7 +151,7 @@ const GameController = (() => {
   //Events
   events.on("boardUpdate", (data) => _getBoard(data));
   events.on("cellClick", () => events.emit("getBoard"));
-  events.on("resetGame", () => _resetGame);
+  events.on("resetGame", _resetGame);
 
   //Method Exposure
   return {
@@ -170,6 +161,7 @@ const GameController = (() => {
     getPlayerID,
     getTurnNumber,
     _getBoard,
+    isGameActive,
   };
 })();
 

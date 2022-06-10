@@ -8,20 +8,23 @@ let settingsBtn = document.querySelector("#gear-icon");
 let board = [];
 
 settingsBtn.addEventListener("click", () => {
-  events.emit("openSettings");
+  let data = { type: "settings" };
+  events.emit("openModal", data);
 });
 
 const _getBoard = (data) => (board = data);
 
 const play = (data) => {
-  let mark =
-    GameController.getCurrentPlayer() == player1.getPlayerType()
-      ? player1.getPlayerType()
-      : player2.getPlayerType();
-  if (GameController.checkValidMove(data)) {
-    let move = { mark: mark, index: data };
-    events.emit("playerMove", move);
-    GameController.switchPlayer();
+  if (GameController.isGameActive()) {
+    let mark =
+      GameController.getCurrentPlayer() == player1.getPlayerType()
+        ? player1.getPlayerType()
+        : player2.getPlayerType();
+    if (GameController.checkValidMove(data)) {
+      let move = { mark: mark, index: data };
+      events.emit("playerMove", move);
+      GameController.switchPlayer();
+    }
   }
 };
 
