@@ -9,7 +9,7 @@ const SettingsModal = (() => {
   let bot2 = document.querySelector("#bot-2");
 
   let gameActive = true;
-  let player;
+  let player = "";
 
   //DOM Bindings
   const modalEscape = (event) => {
@@ -33,6 +33,7 @@ const SettingsModal = (() => {
       events.emit("resetGame");
       flush(modal);
       modal.close();
+      player = "";
     });
   };
 
@@ -98,7 +99,7 @@ const SettingsModal = (() => {
   const _openModal = (data) => {
     if ("player" in data) player = data.player;
     document.addEventListener("keydown", modalEscape);
-    if (data.type == "tie" || (!gameActive && !("player" in data))) {
+    if (data.type == "tie" || (!gameActive && player == "")) {
       modal.append(createTieModal());
       modal.showModal();
       bindResetBtn();
@@ -112,6 +113,24 @@ const SettingsModal = (() => {
     }
     bindCloseBtn();
   };
+
+  // const _openModal = (data) => {
+  //   if ("player" in data) player = data.player;
+  //   document.addEventListener("keydown", modalEscape);
+  //   if (data.type == "tie" || (!gameActive && !("player" in data))) {
+  //     modal.append(createTieModal());
+  //     modal.showModal();
+  //     bindResetBtn();
+  //   } else if (!gameActive || data.type == "winMessage") {
+  //     modal.append(createWinModal(player));
+  //     modal.showModal();
+  //     bindResetBtn();
+  //   } else if (data.type == "settings") {
+  //     modal.append(createSettingsModal());
+  //     modal.showModal();
+  //   }
+  //   bindCloseBtn();
+  // };
 
   //Events
   events.on("openModal", (data) => _openModal(data));
