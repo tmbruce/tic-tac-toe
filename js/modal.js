@@ -114,24 +114,6 @@ const SettingsModal = (() => {
     bindCloseBtn();
   };
 
-  // const _openModal = (data) => {
-  //   if ("player" in data) player = data.player;
-  //   document.addEventListener("keydown", modalEscape);
-  //   if (data.type == "tie" || (!gameActive && !("player" in data))) {
-  //     modal.append(createTieModal());
-  //     modal.showModal();
-  //     bindResetBtn();
-  //   } else if (!gameActive || data.type == "winMessage") {
-  //     modal.append(createWinModal(player));
-  //     modal.showModal();
-  //     bindResetBtn();
-  //   } else if (data.type == "settings") {
-  //     modal.append(createSettingsModal());
-  //     modal.showModal();
-  //   }
-  //   bindCloseBtn();
-  // };
-
   //Events
   events.on("openModal", (data) => _openModal(data));
   events.on("gameActive", (data) => _updateGameActive(data));
