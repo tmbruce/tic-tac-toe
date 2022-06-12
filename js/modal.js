@@ -3,6 +3,11 @@ import events from "./events.js";
 const SettingsModal = (() => {
   //Variables
   let modal = document.querySelector("#modal");
+  let human1 = document.querySelector("#human-1");
+  let bot1 = document.querySelector("#bot-1");
+  let human2 = document.querySelector("#human-2");
+  let bot2 = document.querySelector("#bot-2");
+
   let gameActive = true;
   let player;
 
@@ -51,11 +56,34 @@ const SettingsModal = (() => {
     return html;
   };
 
+  const createTieModal = () => {
+    let html = createHtmlElement(`
+    <div class="modal-content">
+      <button class="close-btn">Close</button>
+      <div class="win-message">Tie! Try Again!</div>
+      <button class="reset-btn">Reset Game!</button>
+    </div>
+    `);
+    return html;
+  };
+
   const createSettingsModal = () => {
     let html = createHtmlElement(`
     <div class="modal-content">
       <button class="close-btn">Close</button>
       <div class="settings-title">Settings</div>
+      <div class="settings-container">
+        <div class="player-name">Player 1</div>
+        <div class="player-name">Player 2</div>
+        <button class="player-type active" id="human-1">Human</button>
+        <button class="player-type" id="bot-1">Bot</button>
+        <button class="player-type active" id="human-2">Human</button>
+        <button class="player-type" id="bot-2">Bot</button>
+        <div class="bot-level">Bot difficulty</div>
+        <button class="bot-difficulty active">easy</button>
+        <button class="bot-difficulty">medium</button>
+        <button class="bot-difficulty">difficult</button>
+        <button class="bot-difficulty">EXTREME!</button>
     <div>
     `);
     return html;
@@ -69,9 +97,12 @@ const SettingsModal = (() => {
 
   const _openModal = (data) => {
     if ("player" in data) player = data.player;
-
     document.addEventListener("keydown", modalEscape);
-    if (!gameActive || data.type == "winMessage") {
+    if (data.type == "tie" || (!gameActive && !("player" in data))) {
+      modal.append(createTieModal());
+      modal.showModal();
+      bindResetBtn();
+    } else if (!gameActive || data.type == "winMessage") {
       modal.append(createWinModal(player));
       modal.showModal();
       bindResetBtn();

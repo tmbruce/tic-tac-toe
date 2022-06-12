@@ -115,11 +115,18 @@ const GameController = (() => {
 
   const checkWinner = () => {
     let res = find_move(board.toString());
+    if (_turnNumber == 9) {
+      gameActive = false;
+      let data = { type: "tie" };
+      events.emit("gameActive", gameActive);
+      events.emit("openModal", data);
+    }
     if (parseInt(res)) {
       //return next move
     } else {
       let [win, vec] = res.split("-");
       vec = [...vec];
+
       if (win == "true") {
         gameActive = false;
         events.emit("gameActive", gameActive);
