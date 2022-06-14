@@ -3,11 +3,6 @@ import events from "./events.js";
 const SettingsModal = (() => {
   //Variables
   let modal = document.querySelector("#modal");
-  let human1 = document.querySelector("#human-1");
-  let bot1 = document.querySelector("#bot-1");
-  let human2 = document.querySelector("#human-2");
-  let bot2 = document.querySelector("#bot-2");
-
   let gameActive = true;
   let player = "";
 
@@ -16,6 +11,56 @@ const SettingsModal = (() => {
     if (event.key == "Escape") {
       document.querySelector(".close-btn").click();
     }
+  };
+
+  const bindSettingsModal = () => {
+    let human1 = document.querySelector("#human-1");
+    let bot1 = document.querySelector("#bot-1");
+    let human2 = document.querySelector("#human-2");
+    let bot2 = document.querySelector("#bot-2");
+    let p1 = [human1, bot1];
+    let p2 = [human2, bot2];
+
+    let diff1 = document.querySelector("#diff1");
+    let diff2 = document.querySelector("#diff2");
+    let diff3 = document.querySelector("#diff3");
+    let diff4 = document.querySelector("#diff4");
+    let difficulty = [diff1, diff2, diff3, diff4];
+
+    p1.forEach((player) => {
+      player.addEventListener("click", () => {
+        if (!player.classList.contains("active")) {
+          _toggleClass(...p1);
+          let data = { player: "player1" };
+          events.emit("updatePlayerType", data);
+        }
+      });
+    });
+
+    p2.forEach((player) => {
+      player.addEventListener("click", () => {
+        if (!player.classList.contains("active")) {
+          _toggleClass(...p2);
+          let data = { player: "player1" };
+          events.emit("updatePlayerType", data);
+        }
+      });
+    });
+
+    difficulty.forEach((diff) => {
+      diff.addEventListener("click", () => {
+        if (!diff.classList.contains("active")) {
+          _toggleClass(diff);
+          let data = { difficulty: diff.textContent };
+          events.emit("updateDifficulty", data);
+        }
+        difficulty.forEach((old) => {
+          if (old.classList.contains("active") && old != diff) {
+            _toggleClass(old);
+          }
+        });
+      });
+    });
   };
 
   const bindCloseBtn = () => {
@@ -38,6 +83,12 @@ const SettingsModal = (() => {
   };
 
   //Methods
+  const _toggleClass = (...elements) => {
+    elements.forEach((element) => {
+      element.classList.toggle("active");
+    });
+  };
+
   const _updateGameActive = (data) => (gameActive = data);
 
   const flush = (element) => {
@@ -81,10 +132,10 @@ const SettingsModal = (() => {
         <button class="player-type active" id="human-2">Human</button>
         <button class="player-type" id="bot-2">Bot</button>
         <div class="bot-level">Bot difficulty</div>
-        <button class="bot-difficulty active">easy</button>
-        <button class="bot-difficulty">medium</button>
-        <button class="bot-difficulty">difficult</button>
-        <button class="bot-difficulty">EXTREME!</button>
+        <button class="bot-difficulty active" id="diff1">easy</button>
+        <button class="bot-difficulty" id="diff2">medium</button>
+        <button class="bot-difficulty" id="diff3">difficult</button>
+        <button class="bot-difficulty" id="diff4">EXTREME!</button>
     <div>
     `);
     return html;
@@ -110,6 +161,7 @@ const SettingsModal = (() => {
     } else if (data.type == "settings") {
       modal.append(createSettingsModal());
       modal.showModal();
+      bindSettingsModal();
     }
     bindCloseBtn();
   };

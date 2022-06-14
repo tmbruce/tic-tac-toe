@@ -8,6 +8,10 @@ const Player = () => {
   //DOM Bindings
 
   //Methods
+  const isHuman = () => {
+    return human;
+  };
+
   const getPlayerType = () => {
     return playerType;
   };
@@ -16,7 +20,7 @@ const Player = () => {
     human = !human;
   };
 
-  return { getPlayerType };
+  return { getPlayerType, changePlayerType, isHuman };
 };
 
 export default Player;

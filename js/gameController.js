@@ -25,6 +25,10 @@ const GameController = (() => {
 
   const getTurnNumber = () => _turnNumber;
 
+  const _updateDifficulty = (data) => {
+    console.log(data);
+  };
+
   const _resetGame = () => {
     strikeThrough.style.cssText = "";
     gameActive = true;
@@ -157,6 +161,7 @@ const GameController = (() => {
   events.on("boardUpdate", (data) => _getBoard(data));
   events.on("cellClick", () => events.emit("getBoard"));
   events.on("resetGame", _resetGame);
+  events.on("updateDifficulty", (data) => _updateDifficulty(data));
 
   //Method Exposure
   return {

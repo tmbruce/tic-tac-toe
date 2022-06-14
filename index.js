@@ -12,6 +12,12 @@ settingsBtn.addEventListener("click", () => {
   events.emit("openModal", data);
 });
 
+const _updatePlayerType = (data) => {
+  data.player == "player1"
+    ? player1.changePlayerType()
+    : player2.changePlayerType();
+};
+
 const _getBoard = (data) => (board = data);
 
 const play = (data) => {
@@ -28,5 +34,6 @@ const play = (data) => {
   }
 };
 
+events.on("updatePlayerType", (data) => _updatePlayerType(data));
 events.on("cellClick", (data) => play(data));
 events.on("boardUpdate", (data) => _getBoard(data));
