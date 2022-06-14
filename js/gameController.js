@@ -26,7 +26,7 @@ const GameController = (() => {
   const getTurnNumber = () => _turnNumber;
 
   const _updateDifficulty = (data) => {
-    console.log(data);
+    console.log("UPDATE METHOD TO CHANGE DIFFICULTY");
   };
 
   const _resetGame = () => {

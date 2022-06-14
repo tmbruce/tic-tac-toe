@@ -5,6 +5,7 @@ const SettingsModal = (() => {
   let modal = document.querySelector("#modal");
   let gameActive = true;
   let player = "";
+  let gameSettings = { player1: true, player2: true, difficulty: "easy" };
 
   //DOM Bindings
   const modalEscape = (event) => {
@@ -27,12 +28,32 @@ const SettingsModal = (() => {
     let diff4 = document.querySelector("#diff4");
     let difficulty = [diff1, diff2, diff3, diff4];
 
+    gameSettings.player1 ? _toggleClass(human1) : _toggleClass(bot1);
+    gameSettings.player2 ? _toggleClass(human2) : _toggleClass(bot2);
+    switch (gameSettings.difficulty) {
+      case "easy":
+        _toggleClass(diff1);
+        break;
+      case "medium":
+        _toggleClass(diff2);
+        break;
+      case "difficult":
+        _toggleClass(diff3);
+        break;
+      case "EXTREME!":
+        _toggleClass(diff4);
+        break;
+    }
+
     p1.forEach((player) => {
       player.addEventListener("click", () => {
         if (!player.classList.contains("active")) {
           _toggleClass(...p1);
           let data = { player: "player1" };
           events.emit("updatePlayerType", data);
+          gameSettings.player1
+            ? (gameSettings.player1 = false)
+            : (gameSettings.player1 = true);
         }
       });
     });
@@ -41,8 +62,11 @@ const SettingsModal = (() => {
       player.addEventListener("click", () => {
         if (!player.classList.contains("active")) {
           _toggleClass(...p2);
-          let data = { player: "player1" };
+          let data = { player: "player2" };
           events.emit("updatePlayerType", data);
+          gameSettings.player2
+            ? (gameSettings.player2 = false)
+            : (gameSettings.player2 = true);
         }
       });
     });
@@ -53,6 +77,7 @@ const SettingsModal = (() => {
           _toggleClass(diff);
           let data = { difficulty: diff.textContent };
           events.emit("updateDifficulty", data);
+          gameSettings.difficulty = diff.textContent;
         }
         difficulty.forEach((old) => {
           if (old.classList.contains("active") && old != diff) {
@@ -127,15 +152,15 @@ const SettingsModal = (() => {
       <div class="settings-container">
         <div class="player-name">Player 1</div>
         <div class="player-name">Player 2</div>
-        <button class="player-type active" id="human-1">Human</button>
+        <button class="player-type" id="human-1">Human</button>
         <button class="player-type" id="bot-1">Bot</button>
-        <button class="player-type active" id="human-2">Human</button>
+        <button class="player-type" id="human-2">Human</button>
         <button class="player-type" id="bot-2">Bot</button>
         <div class="bot-level">Bot difficulty</div>
-        <button class="bot-difficulty active" id="diff1">easy</button>
-        <button class="bot-difficulty" id="diff2">medium</button>
-        <button class="bot-difficulty" id="diff3">difficult</button>
-        <button class="bot-difficulty" id="diff4">EXTREME!</button>
+        <button class="bot-difficulty" id="diff1" data-id="1">easy</button>
+        <button class="bot-difficulty" id="diff2" data-id="2">medium</button>
+        <button class="bot-difficulty" id="diff3" data-id="3">difficult</button>
+        <button class="bot-difficulty" id="diff4" data-id="4">EXTREME!</button>
     <div>
     `);
     return html;
