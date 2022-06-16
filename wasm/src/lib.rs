@@ -89,7 +89,14 @@ fn score(_board: [char; 9]) -> i32 {
     }
 }
 
-fn minimax(_board: [char; 9], depth: i32, mut alpha: i32, mut beta: i32, maximizing: bool) -> i32 {
+fn minimax(
+    _board: [char; 9],
+    depth: i32,
+    mut alpha: i32,
+    mut beta: i32,
+    maximizing: bool,
+    maximizing_player: char,
+) -> i32 {
     let score = score(_board);
     if score != 0 {
         return score;
@@ -99,12 +106,12 @@ fn minimax(_board: [char; 9], depth: i32, mut alpha: i32, mut beta: i32, maximiz
         let mut best_move = 0;
         if maximizing {
             let mut best_score = -1000;
-
             let mut i = 0;
             while i < board.len() {
                 if board[i] == ' ' {
-                    board[i] = player;
-                    let score = minimax(board, depth - 1, alpha, beta, false);
+                    board[i] = maximizing_player;
+                    println!("{:?}", board);
+                    let score = minimax(board, depth - 1, alpha, beta, false, maximizing_player);
                     board[i] = ' ';
                     best_move = if score > best_score { i } else { best_move };
                     best_score = cmp::max(best_score, score);
@@ -120,8 +127,9 @@ fn minimax(_board: [char; 9], depth: i32, mut alpha: i32, mut beta: i32, maximiz
             let mut i = 0;
             while i < board.len() {
                 if board[i] == ' ' {
-                    board[i] = other_player;
-                    let score = minimax(board, depth - 1, alpha, beta, true);
+                    board[i] = if maximizing_player == 'X' { 'O' } else { 'X' };
+                    println!("{:?}", board);
+                    let score = minimax(board, depth - 1, alpha, beta, true, maximizing_player);
                     board[i] = ' ';
                     worst_score = cmp::min(score, worst_score);
                     beta = cmp::min(beta, score);
@@ -132,6 +140,7 @@ fn minimax(_board: [char; 9], depth: i32, mut alpha: i32, mut beta: i32, maximiz
                 i += 1;
             }
         }
+        println!("{}", best_move);
         best_move as i32
     }
 }
@@ -166,7 +175,7 @@ pub fn find_move(game_board: String) -> String {
     if winner {
         return format!("{}-{:?}{:?}{:?}", winner, moves[0], moves[1], moves[2]);
     } else {
-        let next_move = minimax(board, 0, 0, 0, true);
+        let next_move = minimax(board, 0, 0, 0, true, 'X');
         format!("{}", next_move)
     }
 }
