@@ -119,6 +119,7 @@ const GameController = (() => {
 
   const checkWinner = () => {
     let res = find_move(board.toString());
+    console.log(res);
     if (res > 1000) {
       //return next move
     } else {

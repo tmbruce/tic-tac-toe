@@ -1,5 +1,5 @@
 [package]
-name = "test-wasm"
+name = "wasm"
 version = "0.1.0"
 edition = "2021"
 
