@@ -30,18 +30,23 @@ const SettingsModal = (() => {
 
     gameSettings.player1 ? _toggleClass(human1) : _toggleClass(bot1);
     gameSettings.player2 ? _toggleClass(human2) : _toggleClass(bot2);
+    let data = {};
     switch (gameSettings.difficulty) {
       case "easy":
         _toggleClass(diff1);
+        events.emit("updateDifficulty", (data = { dificulty: "easy" }));
         break;
       case "medium":
         _toggleClass(diff2);
+        events.emit("updateDifficulty", (data = { dificulty: "medium" }));
         break;
       case "difficult":
         _toggleClass(diff3);
+        events.emit("updateDifficulty", (data = { dificulty: "difficult" }));
         break;
       case "EXTREME!":
         _toggleClass(diff4);
+        events.emit("updateDifficulty", (data = { dificulty: "extreme" }));
         break;
     }
 
@@ -194,6 +199,7 @@ const SettingsModal = (() => {
   //Events
   events.on("openModal", (data) => _openModal(data));
   events.on("gameActive", (data) => _updateGameActive(data));
+  events.on("botPlay", (data) => {});
 })();
 
 export default SettingsModal;

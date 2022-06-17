@@ -57,28 +57,7 @@ fn input_to_array(game_board: String) -> [char; 9] {
     board
 }
 
-fn check_turn(board: [char; 9]) -> (char, char) {
-    let mut turn: i32 = 0;
-    let player: char;
-    for v in board {
-        if v != ' ' {
-            turn += 1;
-        }
-    }
-    if turn % 2 == 0 {
-        player = 'O';
-    } else {
-        player = 'X';
-    }
-    if player == 'X' {
-        ('X', 'O')
-    } else {
-        ('O', 'X')
-    }
-}
-
-fn score(_board: [char; 9]) -> i32 {
-    let (player, _) = check_turn(_board);
+fn score(_board: [char; 9], player: char) -> i32 {
     let (winner, _, _player) = check_for_winner(_board);
     if winner && player == _player {
         return 1;
@@ -97,20 +76,18 @@ fn minimax(
     maximizing: bool,
     maximizing_player: char,
 ) -> i32 {
-    let score = score(_board);
+    let score = score(_board, maximizing_player);
+    let mut best_move = 0;
     if score != 0 {
         return score;
     } else {
         let mut board = _board.clone();
-        let (player, other_player) = check_turn(board);
-        let mut best_move = 0;
         if maximizing {
             let mut best_score = -1000;
             let mut i = 0;
             while i < board.len() {
                 if board[i] == ' ' {
                     board[i] = maximizing_player;
-                    println!("{:?}", board);
                     let score = minimax(board, depth - 1, alpha, beta, false, maximizing_player);
                     board[i] = ' ';
                     best_move = if score > best_score { i } else { best_move };
@@ -128,54 +105,40 @@ fn minimax(
             while i < board.len() {
                 if board[i] == ' ' {
                     board[i] = if maximizing_player == 'X' { 'O' } else { 'X' };
-                    println!("{:?}", board);
                     let score = minimax(board, depth - 1, alpha, beta, true, maximizing_player);
                     board[i] = ' ';
                     worst_score = cmp::min(score, worst_score);
                     beta = cmp::min(beta, score);
-                    if beta < alpha {
+                    if beta <= alpha {
                         break;
                     }
                 }
                 i += 1;
             }
+            return worst_score;
         }
-        println!("{}", best_move);
-        best_move as i32
     }
+    best_move as i32
 }
-
-// fn best_move(_board: [char; 9]) -> i32 {
-//     let mut board = _board.clone();
-//     let player = check_turn(board);
-//     let mut best_score = -1000;
-//     let mut best_move = 0;
-//     let mut i = 0;
-//     while i < board.len() {
-//         if board[i] == ' ' {
-//             board[i] = player;
-//             let score = minimax(board);
-//             board[i] = ' ';
-//             best_score = if best_score > score {
-//                 best_move = i;
-//                 best_score
-//             } else {
-//                 score
-//             };
-//         }
-//         i += 1;
-//     }
-//     best_move as i32
-// }
 
 #[wasm_bindgen]
 pub fn find_move(game_board: String) -> String {
-    let board: [char; 9] = input_to_array(game_board);
+    let mut iter = game_board.split_whitespace();
+    let maximizing_player = iter.next().unwrap();
+    let _board = iter.next().unwrap();
+    let board: [char; 9] = input_to_array(String::from(_board));
     let (winner, moves, _) = check_for_winner(board);
     if winner {
         return format!("{}-{:?}{:?}{:?}", winner, moves[0], moves[1], moves[2]);
     } else {
-        let next_move = minimax(board, 0, 0, 0, true, 'X');
+        let next_move = minimax(
+            board,
+            9,
+            -1000,
+            1000,
+            true,
+            maximizing_player.chars().next().unwrap(),
+        );
         format!("{}", next_move)
     }
 }

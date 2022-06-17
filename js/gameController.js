@@ -11,6 +11,7 @@ const GameController = (() => {
   let _players = ["X", "O"];
   let _currentPlayer = _players[0];
   let board = [];
+  let difficulty = 0.25;
 
   //DOM Bindings
   let player1 = document.querySelector("#player1");
@@ -19,6 +20,8 @@ const GameController = (() => {
   //Methods
   const getCurrentPlayer = () => _currentPlayer;
 
+  const getDifficulty = () => difficulty;
+
   const getPlayerID = () => {
     return playerId.shift();
   };
@@ -26,7 +29,20 @@ const GameController = (() => {
   const getTurnNumber = () => _turnNumber;
 
   const _updateDifficulty = (data) => {
-    console.log("UPDATE METHOD TO CHANGE DIFFICULTY");
+    switch (data.difficulty) {
+      case "easy":
+        difficulty = 0.25;
+        break;
+      case "medium":
+        difficulty = 0.4;
+        break;
+      case "difficult":
+        difficulty = 0.6;
+        break;
+      case "extreme":
+        difficulty = 1;
+        break;
+    }
   };
 
   const _resetGame = () => {
@@ -117,8 +133,17 @@ const GameController = (() => {
     }, 600);
   };
 
+  const getBestMove = () => {
+    let bestMove = find_move(_currentPlayer + board.toString());
+    let threshold = Math.random();
+    if (difficulty < threshold) {
+      events.emit("cellClick", bestMove);
+    }
+  };
+
   const checkWinner = () => {
-    let res = find_move(board.toString());
+    let str = _currentPlayer + " " + board;
+    let res = find_move(str);
     console.log(res);
     if (res > 1000) {
       //return next move
@@ -150,7 +175,8 @@ const GameController = (() => {
     _turnNumber += 1;
     _toggleClass(player1);
     _toggleClass(player2);
-    if (_turnNumber > 4) checkWinner();
+    //TODO Change _turnNumber > 0 back to _turnNumber > 4
+    if (_turnNumber > 0) checkWinner();
   };
   const isGameActive = () => gameActive;
 
@@ -163,6 +189,7 @@ const GameController = (() => {
   events.on("cellClick", () => events.emit("getBoard"));
   events.on("resetGame", _resetGame);
   events.on("updateDifficulty", (data) => _updateDifficulty(data));
+  events.on("botPlay", () => getBestMove());
 
   //Method Exposure
   return {
@@ -173,6 +200,7 @@ const GameController = (() => {
     getTurnNumber,
     _getBoard,
     isGameActive,
+    getDifficulty,
   };
 })();
 

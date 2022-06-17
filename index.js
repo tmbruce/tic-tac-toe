@@ -18,6 +18,10 @@ const _updatePlayerType = (data) => {
     : player2.changePlayerType();
 };
 
+const botPlay = () => {
+  events.emit("botPlay");
+};
+
 const _getBoard = (data) => (board = data);
 
 const play = (data) => {
