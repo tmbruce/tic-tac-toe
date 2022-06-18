@@ -30,6 +30,7 @@ const SettingsModal = (() => {
 
     gameSettings.player1 ? _toggleClass(human1) : _toggleClass(bot1);
     gameSettings.player2 ? _toggleClass(human2) : _toggleClass(bot2);
+
     let data = {};
     switch (gameSettings.difficulty) {
       case "easy":
@@ -55,10 +56,15 @@ const SettingsModal = (() => {
         if (!player.classList.contains("active")) {
           _toggleClass(...p1);
           let data = { player: "player1" };
-          events.emit("updatePlayerType", data);
           gameSettings.player1
             ? (gameSettings.player1 = false)
             : (gameSettings.player1 = true);
+          if (gameSettings.player1 == false && gameSettings.player2 == false) {
+            human2.click();
+          }
+          events.emit("resetGame");
+          events.emit("updatePlayerType", data);
+          events.emit("gameSettings", gameSettings);
         }
       });
     });
@@ -68,10 +74,15 @@ const SettingsModal = (() => {
         if (!player.classList.contains("active")) {
           _toggleClass(...p2);
           let data = { player: "player2" };
-          events.emit("updatePlayerType", data);
           gameSettings.player2
             ? (gameSettings.player2 = false)
             : (gameSettings.player2 = true);
+          if (gameSettings.player1 == false && gameSettings.player2 == false) {
+            human1.click();
+          }
+          events.emit("resetGame");
+          events.emit("updatePlayerType", data);
+          events.emit("gameSettings", gameSettings);
         }
       });
     });
@@ -81,6 +92,7 @@ const SettingsModal = (() => {
         if (!diff.classList.contains("active")) {
           _toggleClass(diff);
           let data = { difficulty: diff.textContent };
+          events.emit("resetGame");
           events.emit("updateDifficulty", data);
           gameSettings.difficulty = diff.textContent;
         }
@@ -199,7 +211,6 @@ const SettingsModal = (() => {
   //Events
   events.on("openModal", (data) => _openModal(data));
   events.on("gameActive", (data) => _updateGameActive(data));
-  events.on("botPlay", (data) => {});
 })();
 
 export default SettingsModal;

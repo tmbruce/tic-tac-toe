@@ -12,6 +12,7 @@ const GameController = (() => {
   let _currentPlayer = _players[0];
   let board = [];
   let difficulty = 0.25;
+  let gameSettings = {};
 
   //DOM Bindings
   let player1 = document.querySelector("#player1");
@@ -39,7 +40,7 @@ const GameController = (() => {
       case "difficult":
         difficulty = 0.6;
         break;
-      case "extreme":
+      case "EXTREME!":
         difficulty = 1;
         break;
     }
@@ -56,6 +57,7 @@ const GameController = (() => {
     }
     events.emit("resetBoard");
     events.emit("gameActive", gameActive);
+    if ("player1" in gameSettings && !gameSettings.player1) getBestMove();
   };
 
   const calcAngle = (vec) => {
@@ -134,32 +136,43 @@ const GameController = (() => {
   };
 
   const getBestMove = () => {
-    let bestMove = find_move(_currentPlayer + board.toString());
+    let bestMove;
+    if (_turnNumber == 0) {
+      bestMove = find_move(`${_currentPlayer} ,,,,,,,,`);
+    } else {
+      bestMove = find_move(`${_currentPlayer} ${board.toString()}`);
+    }
     let threshold = Math.random();
-    if (difficulty < threshold) {
+    if (difficulty > threshold) {
       events.emit("cellClick", bestMove);
+    } else {
+      let openSpots = [];
+      board.forEach((v, i) => {
+        if (v == "") {
+          openSpots.push(i);
+        }
+      });
+      events.emit(
+        "cellClick",
+        openSpots[Math.floor(threshold * openSpots.length)]
+      );
     }
   };
 
   const checkWinner = () => {
     let str = _currentPlayer + " " + board;
     let res = find_move(str);
-    console.log(res);
-    if (res > 1000) {
-      //return next move
-    } else {
-      let [win, vec] = res.split("-");
-      if (win == "true") {
-        vec = [...vec];
-        gameActive = false;
-        events.emit("gameActive", gameActive);
-        declareWinner(vec);
-      } else if (_turnNumber == 9) {
-        gameActive = false;
-        let data = { type: "tie" };
-        events.emit("gameActive", gameActive);
-        events.emit("openModal", data);
-      }
+    let [win, vec] = res.split("-");
+    if (win == "true") {
+      vec = [...vec];
+      gameActive = false;
+      events.emit("gameActive", gameActive);
+      declareWinner(vec);
+    } else if (_turnNumber == 9) {
+      gameActive = false;
+      let data = { type: "tie" };
+      events.emit("gameActive", gameActive);
+      events.emit("openModal", data);
     }
   };
 
@@ -175,8 +188,9 @@ const GameController = (() => {
     _turnNumber += 1;
     _toggleClass(player1);
     _toggleClass(player2);
-    //TODO Change _turnNumber > 0 back to _turnNumber > 4
     if (_turnNumber > 0) checkWinner();
+    if (_currentPlayer == "X" && gameSettings.player1 == false) getBestMove();
+    if (_currentPlayer == "O" && gameSettings.player2 == false) getBestMove();
   };
   const isGameActive = () => gameActive;
 
@@ -189,6 +203,9 @@ const GameController = (() => {
   events.on("cellClick", () => events.emit("getBoard"));
   events.on("resetGame", _resetGame);
   events.on("updateDifficulty", (data) => _updateDifficulty(data));
+  events.on("gameSettings", (data) => {
+    gameSettings = data;
+  });
   events.on("botPlay", () => getBestMove());
 
   //Method Exposure

@@ -13,13 +13,14 @@ settingsBtn.addEventListener("click", () => {
 });
 
 const _updatePlayerType = (data) => {
-  data.player == "player1"
-    ? player1.changePlayerType()
-    : player2.changePlayerType();
-};
-
-const botPlay = () => {
-  events.emit("botPlay");
+  if (data.player == "player1") {
+    player1.changePlayerType();
+    if (!player1.isHuman() && GameController.getTurnNumber() == 0) {
+      events.emit("botPlay");
+    }
+  } else {
+    player2.changePlayerType();
+  }
 };
 
 const _getBoard = (data) => (board = data);
