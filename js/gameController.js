@@ -1,5 +1,5 @@
 import events from "./events.js";
-import init, { find_move } from "../wasm/pkg/wasm.js";
+import init, { find_move } from "../wasm.js";
 
 const GameController = (() => {
   //Initialize WASM bindings
