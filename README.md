@@ -1,3 +1,5 @@
+[LIVE PREVIEW](https://tmbruce.github.io/tic-tac-toe/)
+
 # Odin Proejct Tic-Tac-Toe
 <p align="center"><img align="center" src='https://user-images.githubusercontent.com/47762048/174463263-b3d13c54-2848-4827-b6ed-8bb43a54ac1a.png'/></p>
 This is tic-tac-toe for the Odin Project javascript section. The purpose of this exercise is to explore organizational patterns in software. The primary objectives were to reduce or eliminate global variables and to use modern software patterns to organize the code in an effective manner.
